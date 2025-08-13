@@ -3,13 +3,13 @@ import { ReactNode } from "react";
 import books from "@/mock/books.json";
 import BookItem from "@/components/book-item";
 import style from "./index.module.css";
-import { InferGetServerSidePropsType, InferGetStaticPropsType } from "next";
+import { InferGetStaticPropsType } from "next";
 import fetchBooks from "@/lib/fetch-books";
 import fetchRandomBooks from "@/lib/fetch-random-books";
 
 export const getStaticProps = async () => {
-  // 컴퍼넌트보다 먼저 실행되어, 컴포넌트에 필요한 데이터를 불러오는 함수
-  console.log("서버사이드 프롭스");
+  // 단순히 그냥 SSG 방식으로 생성된 정적 페이지를 일정 시간을 주기로 다시 생성하는 기술
+  console.log("증분 정적 재생성");
   const [allBooks, recoBooks] = await Promise.all([
     fetchBooks(),
     fetchRandomBooks(),
@@ -20,6 +20,8 @@ export const getStaticProps = async () => {
       allBooks,
       recoBooks,
     },
+    // 유통기한 3초 (revalidate : 재검증)
+    // revalidate: 3,
   };
 };
 

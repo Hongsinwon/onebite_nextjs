@@ -58,3 +58,16 @@ export default function Home({
 Home.getLayout = (page: ReactNode) => {
   return <SearchableLayout>{page}</SearchableLayout>;
 };
+
+//페이지 라우터 정리
+// [장점]
+// 1. 파일 시스템 기반의 간편한 페이지 라우팅 제공 [pages 기반]
+// 2. 다양한 방식의 사전 렌더링 제공(SSR/SSG/ISG)
+// SSR(서버사이드 렌더링) : 요청이 들어올 때 마다 사전 렌더링을 진행
+// SSG(정적 사이트 생성) : 빌드 타임에 미리 페이지를 사전 렌더링
+// ISR(증분 정적 재생성) : SSG 페이지 일정 시간마다 재생성
+
+//[단점]
+//1. 페이지별 레이아웃 설정이 번거롭다.
+//2. 데이퍼 페칭이 페이지 컴포넌트에 집중된다.
+//3. 불 필요한 컴포넌트들도 JS Bundle에 포함된다.

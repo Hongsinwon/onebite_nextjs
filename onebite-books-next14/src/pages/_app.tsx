@@ -20,13 +20,5 @@ export default function App({
   const router = useRouter();
   const getLayout = Component.getLayout ?? ((page: ReactNode) => page);
 
-  // const onClickButton = () => {
-  //   router.push("/test");
-  // };
-
-  // useEffect(() => {
-  //   router.prefetch("/test");
-  // }, []);
-
   return <GlobalLayout>{getLayout(<Component {...pageProps} />)}</GlobalLayout>;
 }

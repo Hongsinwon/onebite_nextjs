@@ -29,8 +29,11 @@ export default function Page({
   book,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   if (book == null) return "문제가 발생했습니다 다시 시도하세요";
+
   const { id, title, subTitle, description, author, publisher, coverImgUrl } =
     book;
+
+  console.log(id);
 
   return (
     <div className={style.container}>

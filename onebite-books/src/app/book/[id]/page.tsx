@@ -1,22 +1,23 @@
 import { notFound } from "next/navigation";
 import style from "./page.module.css";
+import { ReviewData } from "@/types";
+import ReviewItem from "@/components/review-item";
+import ReviewEditor from "@/components/review-editor";
 
+// export const dynamicParams = false;
 export function generateStaticParams() {
   return [{ id: "1" }, { id: "2" }, { id: "3" }];
 }
 
-export default async function Page({
-  params,
-}: {
-  params: { id: string | string[] };
-}) {
+//bookId : params.id 값
+async function BookDetail({ bookId }: { bookId: string }) {
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_SERVER_URL}/book/${params.id}`
+    `${process.env.NEXT_PUBLIC_API_SERVER_URL}/book/${bookId}`
   );
 
   if (!response.ok) {
     if (response.status === 404) {
-      return notFound();
+      notFound();
     }
     return <div>오류가 발생했습니다...</div>;
   }
@@ -27,7 +28,7 @@ export default async function Page({
     book;
 
   return (
-    <div className={style.container}>
+    <section>
       <div
         className={style.cover_img_container}
         style={{ backgroundImage: `url('${coverImgUrl}')` }}>
@@ -39,6 +40,60 @@ export default async function Page({
         {author} | {publisher}
       </div>
       <div className={style.description}>{description}</div>
+    </section>
+  );
+}
+
+// function ReviewEditor({ bookId }: { bookId: string }) {
+// async function createReviewAction(formData: FormData) {
+//   // "use server" 서버액션 사용
+//   "use server";
+
+//   const content = formData.get("content")?.toString();
+//   const author = formData.get("author")?.toString();
+
+//   // console.log(content, author);
+//   if (!content || !author) return;
+// }
+
+//   return (
+//     <section>
+//       <form action={createReviewAction}>
+//         <input name="bookId" value={bookId} hidden readOnly />
+//         <input required name="content" placeholder="리뷰 내용" />
+//         <input required name="author" placeholder="작성자" />
+//         <button type="submit">작성하기</button>
+//       </form>
+//     </section>
+//   );
+// }
+
+async function ReviewList({ bookId }: { bookId: string }) {
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_SERVER_URL}/review/book/${bookId}`
+  );
+
+  if (!response.ok) {
+    throw new Error(`Review fetch failed : ${response.statusText}`);
+  }
+
+  const reviews: ReviewData[] = await response.json();
+
+  return (
+    <section>
+      {reviews.map((review) => (
+        <ReviewItem key={`review-item-${review.id}`} {...review} />
+      ))}
+    </section>
+  );
+}
+
+export default function Page({ params }: { params: { id: string } }) {
+  return (
+    <div className={style.container}>
+      <BookDetail bookId={params.id} />
+      <ReviewEditor bookId={params.id} />
+      <ReviewList bookId={params.id} />
     </div>
   );
 }
